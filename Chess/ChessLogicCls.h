@@ -22,6 +22,14 @@ public:
     // tile - in
     // posMoveList - out
     void CalculatePossibleMoves(TileEnum index, TileEnum* posMoveList);
+
+private:
+    void CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMoveList);
+    void CalculatePossibleRookMoves(TileEnum index, TileEnum* posMoveList);
+    void CalculatePossibleKnightMoves(TileEnum index, TileEnum* posMoveList);
+    void CalculatePossibleBishopMoves(TileEnum index, TileEnum* posMoveList);
+    void CalculatePossibleQueenMoves(TileEnum index, TileEnum* posMoveList);
+    void CalculatePossibleKingMoves(TileEnum index, TileEnum* posMoveList);
 };
 
 #endif // !CHESSLOGICCLS_H

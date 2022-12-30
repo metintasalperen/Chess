@@ -85,3 +85,41 @@ int ChessLogicCls::CalculateIndex(int row, int col)
     int index = (8 * row) + col;
     return index;
 }
+
+void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveIndex)
+{
+    if (TileArr[index].tileStatus == TileStatus_Empty)
+    {
+#ifdef DEBUG
+        qDebug() << "Empty tile is selected!";
+#endif // DEBUG
+
+        posMoveIndex[0] = Tile_Count;
+        return;
+    }
+
+    switch (TileArr[index].piece.pieceType)
+    {
+        case PieceType_Pawn:
+        {
+        }
+        case PieceType_Rook:
+        {
+        }
+        case PieceType_Knight:
+        {
+        }
+        case PieceType_Bishop:
+        {
+        }
+        case PieceType_Queen:
+        {
+        }
+        case PieceType_King:
+        {
+        }
+        default:
+        {
+        }
+    }
+}

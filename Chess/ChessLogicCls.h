@@ -15,6 +15,13 @@ public:
 
     // Maps 2d chess coordinates to 1d array
     int CalculateIndex(int row, int col);
+
+    // Calculates possible moves of piece in given tile
+    // 
+    // Parameters:
+    // tile - in
+    // posMoveList - out
+    void CalculatePossibleMoves(TileEnum index, TileEnum* posMoveList);
 };
 
 #endif // !CHESSLOGICCLS_H

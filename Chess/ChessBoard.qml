@@ -1,4 +1,5 @@
 ﻿import QtQuick 2.9
+import ChessEnums 1.0
 
 // 8x8 Chess Board
 Rectangle {
@@ -79,39 +80,39 @@ Rectangle {
                 font.pixelSize: width / 2
 
                 text: {
-                    if ( (index >= 8) &&
-                         (index < 24) )
+                    if ( (index >= ChessEnums.Piece_WhitePawn1) &&
+                         (index <= ChessEnums.Piece_BlackPawn8) )
                     {
                         return "♟"
                     }
-                    else if ( (index === 0) ||
-                              (index === 7) ||
-                              (index === 24) ||
-                              (index === 31) )
+                    else if ( (index === ChessEnums.Piece_WhiteRook1) ||
+                              (index === ChessEnums.Piece_WhiteRook2) ||
+                              (index === ChessEnums.Piece_BlackRook1) ||
+                              (index === ChessEnums.Piece_BlackRook2) )
                     {
                         return "♜"
                     }
-                    else if ( (index === 1) ||
-                              (index === 6) ||
-                              (index === 25) ||
-                              (index === 30) )
+                    else if ( (index === ChessEnums.Piece_WhiteKnight1) ||
+                              (index === ChessEnums.Piece_WhiteKnight2) ||
+                              (index === ChessEnums.Piece_BlackKnight1) ||
+                              (index === ChessEnums.Piece_BlackKnight2) )
                     {
                         return "♞"
                     }
-                    else if ( (index === 2) ||
-                              (index === 5) ||
-                              (index === 26) ||
-                              (index === 29) )
+                    else if ( (index === ChessEnums.Piece_WhiteBishop1) ||
+                              (index === ChessEnums.Piece_WhiteBishop2) ||
+                              (index === ChessEnums.Piece_BlackBishop1) ||
+                              (index === ChessEnums.Piece_BlackBishop2) )
                     {
                         return "♝"
                     }
-                    else if ( (index === 3) ||
-                              (index === 27) )
+                    else if ( (index === ChessEnums.Piece_WhiteQueen) ||
+                              (index === ChessEnums.Piece_BlackQueen) )
                     {
                         return "♛"
                     }
-                    else if ( (index === 4) ||
-                              (index === 28) )
+                    else if ( (index === ChessEnums.Piece_WhiteKing) ||
+                              (index === ChessEnums.Piece_BlackKing) )
                     {
                         return "♚"
                     }

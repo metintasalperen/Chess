@@ -1,11 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include "EnumPkg.h"
+
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_WIN)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+
+    qmlRegisterUncreatableMetaObject(
+        ChessEnums::staticMetaObject,
+        "ChessEnums",
+        1, 0,
+        "ChessEnums",
+        "Error: Only enums");
 
     QGuiApplication app(argc, argv);
 

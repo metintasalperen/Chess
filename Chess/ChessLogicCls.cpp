@@ -79,3 +79,9 @@ ChessLogicCls::ChessLogicCls()
         }
 	}
 }
+
+int ChessLogicCls::CalculateIndex(int row, int col)
+{
+    int index = (8 * row) + col;
+    return index;
+}

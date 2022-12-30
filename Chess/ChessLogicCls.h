@@ -12,6 +12,9 @@ public:
     // Methods
     // Default constructor
     ChessLogicCls();
+
+    // Maps 2d chess coordinates to 1d array
+    int CalculateIndex(int row, int col);
 };
 
 #endif // !CHESSLOGICCLS_H

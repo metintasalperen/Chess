@@ -193,7 +193,8 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
             (index == Tile_A6) ||
             (index == Tile_A7))
         {
-            if (TileArr[rightCaptureMoveWhite].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[rightCaptureMoveWhite].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[rightCaptureMoveWhite].piece.player == Player_Black))
             {
                 posMoveList[posMoveListIndex] = rightCaptureMoveWhite;
                 posMoveList[posMoveListIndex + 1] = Tile_Count;
@@ -207,7 +208,8 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
                  (index == Tile_H6) ||
                  (index == Tile_H7))
         {
-            if (TileArr[leftCaptureMoveWhite].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[leftCaptureMoveWhite].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[leftCaptureMoveWhite].piece.player == Player_Black))
             {
                 posMoveList[posMoveListIndex] = leftCaptureMoveWhite;
                 posMoveList[posMoveListIndex + 1] = Tile_Count;
@@ -221,12 +223,14 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
                  ((index > Tile_A6) && (index < Tile_H6)) ||
                  ((index > Tile_A7) && (index < Tile_H7)))
         {
-            if (TileArr[leftCaptureMoveWhite].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[leftCaptureMoveWhite].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[leftCaptureMoveWhite].piece.player == Player_Black))
             {
                 posMoveList[posMoveListIndex] = leftCaptureMoveWhite;
                 posMoveListIndex = posMoveListIndex + 1;
             }
-            if (TileArr[rightCaptureMoveWhite].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[rightCaptureMoveWhite].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[rightCaptureMoveWhite].piece.player == Player_Black))
             {
                 posMoveList[posMoveListIndex] = rightCaptureMoveWhite;
                 posMoveListIndex = posMoveListIndex + 1;
@@ -299,7 +303,8 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
             (index == Tile_A6) ||
             (index == Tile_A7))
         {
-            if (TileArr[rightCaptureMoveBlack].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[rightCaptureMoveBlack].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[rightCaptureMoveBlack].piece.player == Player_White))
             {
                 posMoveList[posMoveListIndex] = rightCaptureMoveBlack;
                 posMoveList[posMoveListIndex + 1] = Tile_Count;
@@ -313,7 +318,8 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
                  (index == Tile_H6) ||
                  (index == Tile_H7))
         {
-            if (TileArr[leftCaptureMoveBlack].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[leftCaptureMoveBlack].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[leftCaptureMoveBlack].piece.player == Player_White))
             {
                 posMoveList[posMoveListIndex] = leftCaptureMoveBlack;
                 posMoveList[posMoveListIndex + 1] = Tile_Count;
@@ -327,12 +333,14 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
                  ((index > Tile_A6) && (index < Tile_H6)) ||
                  ((index > Tile_A7) && (index < Tile_H7)))
         {
-            if (TileArr[leftCaptureMoveBlack].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[leftCaptureMoveBlack].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[leftCaptureMoveBlack].piece.player == Player_White))
             {
                 posMoveList[posMoveListIndex] = leftCaptureMoveBlack;
                 posMoveListIndex = posMoveListIndex + 1;
             }
-            if (TileArr[rightCaptureMoveBlack].tileStatus == TileStatus_NotEmpty)
+            if ((TileArr[rightCaptureMoveBlack].tileStatus == TileStatus_NotEmpty) &&
+                (TileArr[rightCaptureMoveBlack].piece.player == Player_White))
             {
                 posMoveList[posMoveListIndex] = rightCaptureMoveBlack;
                 posMoveListIndex = posMoveListIndex + 1;

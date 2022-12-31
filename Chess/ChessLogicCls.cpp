@@ -86,6 +86,18 @@ int ChessLogicCls::CalculateIndex(int row, int col)
     return index;
 }
 
+PieceEnum ChessLogicCls::GetPieceId(TileEnum index)
+{
+    if (TileArr[index].tileStatus == TileStatus_NotEmpty)
+    {
+        return TileArr[index].piece.pieceId;
+    }
+    else
+    {
+        return Piece_Count;
+    }
+}
+
 void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveIndex)
 {
     if (TileArr[index].tileStatus == TileStatus_Empty)
@@ -102,6 +114,7 @@ void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveInde
     {
         case PieceType_Pawn:
         {
+            CalculatePossiblePawnMoves(index, posMoveIndex);
         }
         case PieceType_Rook:
         {

@@ -31,11 +31,22 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    console.log(row, col)
-                }
-            }
-        }
-    }
+                    var index = calculateIndex(row, col)
+                    var pieceId = chessUiObj.getPieceId(index)
+
+                    if (pieceId != ChessEnums.Piece_Count)
+                    {
+                        var posMoveList = chessUiObj.handlePieceClicked(index)
+
+                        for (var i = 0; i < posMoveList.length; i++)
+                        {
+                            console.log("item", i, ": ", posMoveList[i])
+                        }
+                    }
+                } // onClicked
+            } // MouseArea
+        } // Rectangle
+    } // Repeater
 
     Repeater {
         id: pieceRepeater
@@ -120,8 +131,13 @@ Rectangle {
                     {
                         return ""
                     }
-                }
-            }
-        }
+                } // text
+            } // Text
+        } // Item
+    } // Repeater
+
+    function calculateIndex(row, col)
+    {
+        return (8 * row) + col
     }
-}
+} // Rectangle

@@ -16,6 +16,9 @@ public:
     // Maps 2d chess coordinates to 1d array
     int CalculateIndex(int row, int col);
 
+    // returns the id of piece in given tile index
+    PieceEnum GetPieceId(TileEnum index);
+
     // Calculates possible moves of piece in given tile
     // 
     // Parameters:

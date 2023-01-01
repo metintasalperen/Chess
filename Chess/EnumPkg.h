@@ -20,6 +20,14 @@ namespace ChessEnums
         TileStatus_Empty = 0,
         TileStatus_NotEmpty = 1
     };
+    Q_ENUM_NS(TileStatusEnum)
+
+    enum PieceClickedEnum
+    {
+        PieceClicked_Clicked = 0,
+        PieceClicked_NotClicked = 1
+    };
+    Q_ENUM_NS(PieceClickedEnum)
 
     enum PieceTypeEnum
     {

@@ -7,6 +7,9 @@
 
 ChessLogicCls::ChessLogicCls()
 {
+    PlayerTurn = Player_White;
+    PieceClicked = PieceClicked_NotClicked;
+
 	memset(&TileArr[0], 0, sizeof(TileStc) * Tile_Count);
 
 	for (int i = 0; i < Tile_Count; i++)
@@ -98,12 +101,35 @@ PieceEnum ChessLogicCls::GetPieceId(TileEnum index)
     }
 }
 
+PlayerEnum ChessLogicCls::GetPlayerTurn()
+{
+    return PlayerTurn;
+}
+
+PieceClickedEnum ChessLogicCls::GetPieceClicked()
+{
+    return PieceClicked;
+}
+
 void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveIndex)
 {
+    // return no possible moves if clicked tile is empty
     if (TileArr[index].tileStatus == TileStatus_Empty)
     {
 #ifdef DEBUG
         qDebug() << "Empty tile is selected!";
+#endif // DEBUG
+
+        posMoveIndex[0] = Tile_Count;
+        return;
+    }
+    else if (((TileArr[index].piece.player == Player_White) &&
+              (PlayerTurn == Player_Black)) ||
+             ((TileArr[index].piece.player == Player_Black) &&
+              (PlayerTurn == Player_White)))
+    {
+#ifdef DEBUG
+        qDebug() << "Wrong player move!";
 #endif // DEBUG
 
         posMoveIndex[0] = Tile_Count;
@@ -115,24 +141,31 @@ void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveInde
         case PieceType_Pawn:
         {
             CalculatePossiblePawnMoves(index, posMoveIndex);
+            break;
         }
         case PieceType_Rook:
         {
+            break;
         }
         case PieceType_Knight:
         {
+            break;
         }
         case PieceType_Bishop:
         {
+            break;
         }
         case PieceType_Queen:
         {
+            break;
         }
         case PieceType_King:
         {
+            break;
         }
         default:
         {
+            break;
         }
     }
 }

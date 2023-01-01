@@ -7,7 +7,12 @@ class ChessLogicCls
 {
 public:
     // Attributes
+    // 8x8 chess board state
     TileStc TileArr[Tile_Count];
+    // Player turn
+    PlayerEnum PlayerTurn;
+    // Indicates whether a piece is clicked to move
+    PieceClickedEnum PieceClicked;
 
     // Methods
     // Default constructor
@@ -18,6 +23,10 @@ public:
 
     // returns the id of piece in given tile index
     PieceEnum GetPieceId(TileEnum index);
+
+    // Getters
+    PlayerEnum GetPlayerTurn();
+    PieceClickedEnum GetPieceClicked();
 
     // Calculates possible moves of piece in given tile
     // 

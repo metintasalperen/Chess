@@ -32,6 +32,16 @@ QVariant ChessUiCls::getPieceId(int index)
     }
 }
 
+QVariant ChessUiCls::getPlayerTurn()
+{
+    return chessLogicObj.GetPlayerTurn();
+}
+
+QVariant ChessUiCls::getPieceClicked()
+{
+    return chessLogicObj.GetPieceClicked();
+}
+
 QVariant ChessUiCls::handlePieceClicked(int index)
 {
     QVariantList moveList;
@@ -57,4 +67,9 @@ QVariant ChessUiCls::handlePieceClicked(int index)
     }
 
     return moveList;
+}
+
+QVariant ChessUiCls::handlePieceClicked2(int index)
+{
+    return QVariant();
 }

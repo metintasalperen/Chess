@@ -33,15 +33,36 @@ Rectangle {
                 onClicked: {
                     var index = calculateIndex(row, col)
                     var pieceId = chessUiObj.getPieceId(index)
+                    var pieceClicked = chessUiObj.getPieceClicked()
 
-                    if (pieceId != ChessEnums.Piece_Count)
+                    // A piece has not clicked yet, possible moves will be listed
+                    if (pieceClicked == ChessEnums.PieceClicked_NotClicked)
                     {
-                        var posMoveList = chessUiObj.handlePieceClicked(index)
-
-                        for (var i = 0; i < posMoveList.length; i++)
+                        if (pieceId != ChessEnums.Piece_Count)
                         {
-                            console.log("item", i, ": ", posMoveList[i])
+                            var posMoveList = chessUiObj.handlePieceClicked(index)
+                            
+                            if (posMoveList.length != 0)
+                            {
+                                tileRepeater.itemAt(index).border.color = "#34a022"
+                                tileRepeater.itemAt(index).border.width = 3
+
+                                for (var i = 0; i < posMoveList.length; i++)
+                                {
+                                    tileRepeater.itemAt(posMoveList[i]).border.color = "#79d46a"
+                                    tileRepeater.itemAt(posMoveList[i]).border.width = 3
+                                }
+                            }
+                            // Else: no possible moves, do nothing.
                         }
+                        // Else: empty tile is clicked, do nothing.
+                    }
+                    // A piece is clicked already, this means;
+                    // if same index is clicked again, then remove border indicators
+                    // if a valid index is clicked, then move piece to that index
+                    // if an invalid index is clicked, then remove border indicators
+                    else if (pieceClicked == ChessEnums.PieceClicked_Clicked)
+                    {
                     }
                 } // onClicked
             } // MouseArea

@@ -24,30 +24,30 @@ Rectangle {
             height: chessBoardContainer.height / 8
 
             color: {
-                var even = ((row + col) % 2) == 0
+                let even = ((row + col) % 2) == 0
                 return even ? "#ffaa88" : "#ff8b47"
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    var index = calculateIndex(row, col)
-                    var pieceId = chessUiObj.getPieceId(index)
-                    var pieceClicked = chessUiObj.getPieceClicked()
+                    let index = calculateIndex(row, col)
+                    let pieceId = chessUiObj.getPieceId(index)
+                    let pieceClicked = chessUiObj.getPieceClicked()
 
                     // A piece has not clicked yet, possible moves will be listed
                     if (pieceClicked == ChessEnums.PieceClicked_NotClicked)
                     {
                         if (pieceId != ChessEnums.Piece_Count)
                         {
-                            var posMoveList = chessUiObj.handlePieceClicked(index)
+                            let posMoveList = chessUiObj.handlePieceClicked(index)
                             
                             if (posMoveList.length != 0)
                             {
                                 tileRepeater.itemAt(index).border.color = "#34a022"
                                 tileRepeater.itemAt(index).border.width = 3
 
-                                for (var i = 0; i < posMoveList.length; i++)
+                                for (let i = 0; i < posMoveList.length; i++)
                                 {
                                     tileRepeater.itemAt(posMoveList[i]).border.color = "#79d46a"
                                     tileRepeater.itemAt(posMoveList[i]).border.width = 3
@@ -63,6 +63,11 @@ Rectangle {
                     // if an invalid index is clicked, then remove border indicators
                     else if (pieceClicked == ChessEnums.PieceClicked_Clicked)
                     {
+                        chessUiObj.handlePieceClicked2(index);
+                        for (let i = 0; i < 64; i++)
+                        {
+                            tileRepeater.itemAt(i).border.width = 0
+                        }
                     }
                 } // onClicked
             } // MouseArea

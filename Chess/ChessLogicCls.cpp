@@ -111,6 +111,18 @@ PieceClickedEnum ChessLogicCls::GetPieceClicked()
     return PieceClicked;
 }
 
+void ChessLogicCls::TogglePieceClicked()
+{
+    if (PieceClicked == PieceClicked_Clicked)
+    {
+        PieceClicked = PieceClicked_NotClicked;
+    }
+    else if (PieceClicked == PieceClicked_NotClicked)
+    {
+        PieceClicked = PieceClicked_Clicked;
+    }
+}
+
 void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveIndex)
 {
     // return no possible moves if clicked tile is empty
@@ -141,6 +153,7 @@ void ChessLogicCls::CalculatePossibleMoves(TileEnum index, TileEnum* posMoveInde
         case PieceType_Pawn:
         {
             CalculatePossiblePawnMoves(index, posMoveIndex);
+            //TogglePieceClicked();
             break;
         }
         case PieceType_Rook:
@@ -177,6 +190,8 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
 
     if (TileArr[index].piece.player == Player_White)
     {
+        // Note: These assignments could be a source of bug if index + val is greater than Tile_Count
+        // Investigate
         TileEnum oneForwardMoveWhite = static_cast<TileEnum>(index + 8);
         TileEnum twoForwardMoveWhite = static_cast<TileEnum>(index + 16);
         TileEnum leftCaptureMoveWhite = static_cast<TileEnum>(index + 7);
@@ -393,5 +408,15 @@ void ChessLogicCls::CalculatePossiblePawnMoves(TileEnum index, TileEnum* posMove
             }
             posMoveList[posMoveListIndex] = Tile_Count;
         }
+    }
+}
+
+void ChessLogicCls::CalculatePossibleRookMoves(TileEnum index, TileEnum* posMoveList)
+{
+
+
+    if (TileArr[index].piece.player == Player_White)
+    {
+
     }
 }

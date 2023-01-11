@@ -60,6 +60,11 @@ QVariant ChessUiCls::handlePieceClicked(int index)
 #endif
             moveList << posMoveList[i];
         }
+
+        if (posMoveList[0] != Tile_Count)
+        {
+            chessLogicObj.TogglePieceClicked();
+        }
     }
     else
     {
@@ -71,5 +76,6 @@ QVariant ChessUiCls::handlePieceClicked(int index)
 
 QVariant ChessUiCls::handlePieceClicked2(int index)
 {
+    chessLogicObj.TogglePieceClicked();
     return QVariant();
 }

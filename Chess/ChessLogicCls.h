@@ -27,11 +27,12 @@ public:
     // Getters
     PlayerEnum GetPlayerTurn();
     PieceClickedEnum GetPieceClicked();
+    void TogglePieceClicked();
 
     // Calculates possible moves of piece in given tile
     // 
     // Parameters:
-    // tile - in
+    // index - in
     // posMoveList - out
     void CalculatePossibleMoves(TileEnum index, TileEnum* posMoveList);
 

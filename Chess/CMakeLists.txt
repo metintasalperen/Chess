@@ -2,6 +2,11 @@
 # project specific logic here.
 #
 
+# Turn on automatic invocation of the MOC, UIC & RCC
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 
 # Add source to this project's executable.

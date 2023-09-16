@@ -6,9 +6,10 @@ find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 
 # Add source to this project's executable.
 add_executable (Chess 
-    "main.cpp"
+    "main.cpp" 
     "Qml/qml.qrc" 
-    "Headers/EnumPkg.h")
+    "Headers/EnumPkg.h" 
+    "Headers/StructPkg.h")
 
 target_link_libraries(Chess PRIVATE Qt6::Core Qt6::Quick)
 

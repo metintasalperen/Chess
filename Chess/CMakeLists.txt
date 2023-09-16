@@ -11,7 +11,9 @@ add_executable (Chess
     "Headers/EnumPkg.h" 
     "Headers/StructPkg.h" 
     "Headers/ChessCls.h" 
-    "Sources/ChessCls.cpp")
+    "Sources/ChessCls.cpp" 
+    "Headers/UiCls.h" 
+    "Sources/UiCls.cpp")
 
 target_link_libraries(Chess PRIVATE Qt6::Core Qt6::Quick)
 

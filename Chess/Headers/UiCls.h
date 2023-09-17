@@ -37,6 +37,10 @@ public slots:
 		unsigned int toFile,
 		unsigned int toRank);
 
+	// 0: White
+	// 1: Black
+	int getTurn();
+
 private:
 	TableStc* TablePtr;
 	UiChessIfc* ItsUiChessIfc;

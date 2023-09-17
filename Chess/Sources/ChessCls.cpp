@@ -102,13 +102,20 @@ uint32_t ChessCls::CalculateIndex(const FileEnum& file, const RankEnum& rank)
 
 bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
 {
-    Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
-    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
-    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+    bool result = CheckMoveValidity(from, to);
 
-    Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
+    if (result == true)
+    {
+        Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
+        Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
+        Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
 
-    return true;
+        Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
+
+        SwitchTurn();
+    }
+
+    return result;
 }
 
 void ChessCls::UpdateTableState(TableStc*& table)
@@ -116,7 +123,364 @@ void ChessCls::UpdateTableState(TableStc*& table)
     table = &Table;
 }
 
+PlayerEnum ChessCls::GetTurn()
+{
+    return Turn;
+}
+
 UiChessIfc* ChessCls::GetItsUiChessIfc()
 {
     return this;
+}
+
+void ChessCls::SwitchTurn()
+{
+    if (Turn == Player_White)
+    {
+        Turn = Player_Black;
+    }
+    else
+    {
+        Turn = Player_White;
+    }
+}
+
+bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
+    uint32_t toIndex   = CalculateIndex(to.File, to.Rank);
+
+    // If ANY of the following conditions are satisfied, return false
+    // A. Player tries to move a piece that does not belong to him
+    // B. Player selects and empty location
+    // C. Player tries to capture his own piece
+
+    if ((Table.Square[fromIndex].State == SquareState_Occupied) &&
+        (Table.Square[fromIndex].Piece.Owner != Turn))
+    {
+        return false;
+    }
+    if (Table.Square[fromIndex].State == SquareState_Empty)
+    {
+        return false;
+    }
+    if ((Table.Square[toIndex].State == SquareState_Occupied) &&
+        (Table.Square[toIndex].Piece.Owner == Turn))
+    {
+        return false;
+    }
+
+    bool result = false;
+    switch (Table.Square[fromIndex].Piece.Name)
+    {
+        case Piece_Pawn:
+        {
+            result = CheckPawnMoveValidity(from, to);
+            break;
+        }
+        case Piece_Rook:
+        {
+            result = CheckRookMoveValidity(from, to);
+            break;
+        }
+        case Piece_Knight:
+        {
+            break;
+        }
+        case Piece_Bishop:
+        {
+            break;
+        }
+        case Piece_Queen:
+        {
+            break;
+        }
+        case Piece_King:
+        {
+            break;
+        }
+        default:
+        {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}
+
+bool ChessCls::CheckPawnMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
+    uint32_t toIndex   = CalculateIndex(to.File, to.Rank);
+
+    if (Table.Square[fromIndex].Piece.Owner == Player_White)
+    {
+        if (Table.Square[toIndex].State == SquareState_Empty)
+        {
+            // White piece can only move forward but not sideways
+            // Therefore, if File changes, then move is invalid
+            if (from.File != to.File)
+            {
+                return false;
+            }
+
+            if (from.Rank == Rank_2)
+            {
+                // Pawn moves 1 tile forward. This move is valid, return true
+                if (to.Rank == Rank_3)
+                {
+                    return true;
+                }
+                else if (to.Rank == Rank_4)
+                {
+                    // Pawn moves 2 tile forward. 1 tile forward is empty, so this move is valid
+                    if (Table.Square[CalculateIndex(to.File, Rank_3)].State == SquareState_Empty)
+                    {
+                        return true;
+                    }
+                    // Pawn moves 2 tile forward but 1 tile forward is occupied, so this move is invalid.
+                    else
+                    {
+                        return false;
+                    }
+                }
+                // Pawn moves more than 2 tiles forward. This move is invalid
+                else
+                {
+                    return false;
+                }
+            } // Rank_2
+            else
+            {
+                if (to.Rank == from.Rank + 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } // NOT Rank_2
+        } // SquareState_Empty
+        else if (Table.Square[toIndex].State == SquareState_Occupied)
+        {
+            // Piece does not move 1 tile forward. This move is invalid
+            if (to.Rank != from.Rank + 1)
+            {
+                return false;
+            }
+
+            if (from.File == File_A)
+            {
+                if (to.File == File_B)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (from.File == File_H)
+            {
+                if (to.File == File_G)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((from.File == to.File + 1) ||
+                    (from.File == to.File - 1))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        } // SquareState_Occupied
+    } // Player_White
+    else if (Table.Square[fromIndex].Piece.Owner == Player_Black)
+    {
+        if (Table.Square[toIndex].State == SquareState_Empty)
+        {
+            // Black piece can only move backward but not sideways
+            // Therefore, if File changes, then move is invalid
+            if (from.File != to.File)
+            {
+                return false;
+            }
+
+            // If rank is 7, then pawn can either move 1 tile backward or 2 tile backward
+            // Else, pawn can only move 1 tile backward
+            if (from.Rank == Rank_7)
+            {
+                // Pawn moves 1 tile backward. This move is valid, return true
+                if (to.Rank == Rank_6)
+                {
+                    return true;
+                }
+                else if (to.Rank == Rank_5)
+                {
+                    // Pawn moves 2 tile backward. 1 tile backward is empty, so this move is valid
+                    if (Table.Square[CalculateIndex(to.File, Rank_6)].State == SquareState_Empty)
+                    {
+                        return true;
+                    }
+                    // Pawn moves 2 tile backward but 1 tile backward is occupied, so this move is invalid.
+                    else
+                    {
+                        return false;
+                    }
+                }
+                // Pawn moves more than 2 tiles backward. This move is invalid
+                else
+                {
+                    return false;
+                }
+            }
+            // If rank is not 7, then pawn can only move 1 tile forward
+            else
+            {
+                if (to.Rank == from.Rank - 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        else if (Table.Square[toIndex].State == SquareState_Occupied)
+        {
+            // Piece does not move 1 tile backward. This move is invalid
+            if (to.Rank != from.Rank - 1)
+            {
+                return false;
+            }
+
+            if (from.File == File_A)
+            {
+                if (to.File == File_B)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (from.File == File_H)
+            {
+                if (to.File == File_G)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((from.File == to.File + 1) ||
+                    (from.File == to.File - 1))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    } // Player_Black
+
+    // Defensive, should not reach here
+    return false;
+}
+
+bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    // Forward / Backward move
+    if ((from.File == to.File) && (from.Rank != to.Rank))
+    {
+        // Forward move
+        if (to.Rank > from.Rank)
+        {
+            uint32_t diff = to.Rank - from.Rank;
+
+            for (uint32_t i = 1; i < diff; i++)
+            {
+                uint32_t index = CalculateIndex(static_cast<uint32_t>(from.File), from.Rank + i);
+                if (Table.Square[index].State == SquareState_Occupied)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        // Backward move
+        else
+        {
+            uint32_t diff = from.Rank - to.Rank;
+
+            for (uint32_t i = 1; i < diff; i++)
+            {
+                uint32_t index = CalculateIndex(static_cast<uint32_t>(from.File), from.Rank - i);
+                if (Table.Square[index].State == SquareState_Occupied)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+    else if ((from.File != to.File) && (from.Rank == to.Rank))
+    {
+        // Right move
+        if (to.File > from.File)
+        {
+            uint32_t diff = to.File - from.File;
+
+            for (uint32_t i = 1; i < diff; i++)
+            {
+                uint32_t index = CalculateIndex(static_cast<FileEnum>(from.File + i), from.Rank);
+                if (Table.Square[index].State == SquareState_Occupied)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        // Left move
+        else
+        {
+            uint32_t diff = from.File - to.File;
+
+            for (uint32_t i = 1; i < diff; i++)
+            {
+                uint32_t index = CalculateIndex(static_cast<FileEnum>(from.File - i), from.Rank);
+                if (Table.Square[index].State == SquareState_Occupied)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    return false;
 }

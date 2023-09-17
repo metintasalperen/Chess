@@ -65,6 +65,11 @@ bool UiCls::getUserInput(unsigned int fromFile, unsigned int fromRank, unsigned 
     return result;
 }
 
+int UiCls::getTurn()
+{
+    return static_cast<int>(ItsUiChessIfc->GetTurn());
+}
+
 void UiCls::SetItsUiChessIfc(UiChessIfc* ifc)
 {
     ItsUiChessIfc = ifc;

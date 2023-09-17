@@ -30,8 +30,16 @@ private:
 public:
 	bool ProcessUserInput(const MoveStc& from, const MoveStc& to) override;
 	void UpdateTableState(TableStc*& table) override;
+	PlayerEnum GetTurn() override;
 
 	UiChessIfc* GetItsUiChessIfc();
+
+private:
+	void SwitchTurn();
+
+	bool CheckMoveValidity(const MoveStc& from, const MoveStc& to);
+	bool CheckPawnMoveValidity(const MoveStc& from, const MoveStc& to);
+	bool CheckRookMoveValidity(const MoveStc& from, const MoveStc& to);
 };
 
 #endif

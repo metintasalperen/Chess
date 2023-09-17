@@ -30,6 +30,19 @@ Rectangle {
             height: squareSize;
             width: squareSize;
 
+            property bool showBorder: false;
+            border.color: "#009900";
+            border.width: {
+                if (showBorder)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
             color: {
                 var even = ((rank + file) % 2) == 0;
 
@@ -71,21 +84,22 @@ Rectangle {
                     onClicked: {
                         if (!root.fromClicked)
                         {
-                            var occupied = UiObject.isSquareOccupied(square.file, square.rank);
-                        
-                            if (occupied)
+                            var turn = UiObject.getTurn();
+                            var color = UiObject.getPieceColor(square.file, square.rank);
+
+                            if (turn == color)
                             {
+                                square.showBorder = !square.showBorder;
                                 root.fromClicked = true;
-                                root.fromFile = file;
-                                root.fromRank = rank;
+                                root.fromFile = square.file;
+                                root.fromRank = square.rank;
                             }
-                            // Else: Do nothing, player clicked empty square
                         }
                         else
                         {
                             root.fromClicked = false;
+
                             var moveValidity = UiObject.getUserInput(root.fromFile, root.fromRank, square.file, square.rank);
-                        
                             if (moveValidity)
                             {
                                 var index = calculateIndex(root.fromFile, root.fromRank);
@@ -94,6 +108,9 @@ Rectangle {
                                 pieceImage.source = image.source;
                                 image.source = "empty.png";
                             }
+
+                            var fromSquare = board.itemAt(indexes[calculateIndex(root.fromFile, root.fromRank)]);
+                            fromSquare.showBorder = !fromSquare.showBorder;
                         }
                     }
                 }

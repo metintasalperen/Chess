@@ -41,6 +41,7 @@ private:
 	bool CheckPawnMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckRookMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckKnightMoveValidity(const MoveStc& from, const MoveStc& to);
+	bool CheckBishopMoveValidity(const MoveStc& from, const MoveStc& to);
 };
 
 #endif

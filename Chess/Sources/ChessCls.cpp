@@ -190,6 +190,7 @@ bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
         }
         case Piece_Bishop:
         {
+            result = CheckBishopMoveValidity(from, to);
             break;
         }
         case Piece_Queen:
@@ -501,4 +502,89 @@ bool ChessCls::CheckKnightMoveValidity(const MoveStc& from, const MoveStc& to)
     }
 
     return false;
+}
+
+bool ChessCls::CheckBishopMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    uint32_t fileDiff = 0;
+    uint32_t rankDiff = 0;
+
+    // When bishop moves, both rank and file should change
+    // If either of them does not change, move is invalid
+    if ((from.Rank == to.Rank) ||
+        (from.File == to.File))
+    {
+        return false;
+    }
+
+    // Since bishop moves diagonally, file change and rank change should be equal
+    // If it is not equal, then move is not diagonal and invalid
+    if (from.File > to.File)
+    {
+        fileDiff = from.File - to.File;
+    }
+    else
+    {
+        fileDiff = to.File - from.File;
+    }
+
+    if (from.Rank > to.Rank)
+    {
+        rankDiff = from.Rank - to.Rank;
+    }
+    else
+    {
+        rankDiff = to.Rank - from.Rank;
+    }
+
+    if (fileDiff != rankDiff)
+    {
+        return false;
+    }
+
+    uint32_t file = static_cast<uint32_t>(from.File);
+    uint32_t rank = static_cast<uint32_t>(from.Rank);
+
+    while (file != to.File)
+    {
+        // Bottom left movement
+        if ((from.File > to.File) && (from.Rank > to.Rank))
+        {
+            file = file - 1;
+            rank = rank - 1;
+
+        }
+        // Top left movement
+        else if ((from.File > to.File) && (from.Rank < to.Rank))
+        {
+            file = file - 1;
+            rank = rank + 1;
+        }
+        // Bottom right movement
+        else if ((from.File < to.File) && (from.Rank > to.Rank))
+        {
+            file = file + 1;
+            rank = rank - 1;
+        }
+        // Top right movement
+        else if ((from.File < to.File) && (from.Rank < to.Rank))
+        {
+            file = file + 1;
+            rank = rank + 1;
+        }
+
+        if (file == to.File)
+        {
+            return true;
+        }
+
+        uint32_t index = CalculateIndex(file, rank);
+
+        if (Table.Square[index].State == SquareState_Occupied)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

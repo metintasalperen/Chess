@@ -2,6 +2,7 @@
 #define CHESSCLS_H
 
 #include <cstdint>
+#include <vector>
 
 #include "EnumPkg.h"
 #include "StructPkg.h"
@@ -37,6 +38,8 @@ public:
 private:
 	void SwitchTurn();
 
+	void MovePiece(const MoveStc& from, const MoveStc& to);
+
 	bool CheckMoveValidity(const MoveStc& from, const MoveStc& to);
 
 	// TODO: Add en passant
@@ -49,6 +52,14 @@ private:
 	// TODO: Add castling
 	// TODO: Check whether move cause king to be under attack
 	bool CheckKingMoveValidity(const MoveStc& from, const MoveStc& to);
+
+	std::vector<MoveStc> CalculatePossibleMoves(const MoveStc& index);
+
+	MoveStc FindKing(const PlayerEnum& color);
+
+	// This method only called if CheckMoveValidity methods returns true
+	// So no need to check trivial move controls again
+	bool CheckMoveExposesKing(const MoveStc& from, const MoveStc& to);
 };
 
 #endif

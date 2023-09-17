@@ -106,16 +106,24 @@ bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
 
     if (result == true)
     {
-        Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
-        Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
-        Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+        // Moving the piece will cause player's king to be exposed to attack
+        // Move is invalid return false
+        result = CheckMoveExposesKing(from, to);
+        if (result == true)
+        {
+            return false;
+        }
 
-        Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
-
+        MovePiece(from, to);
         SwitchTurn();
+        return true;
+    }
+    else
+    {
+        return false;
     }
 
-    return result;
+    //return result;
 }
 
 void ChessCls::UpdateTableState(TableStc*& table)
@@ -143,6 +151,15 @@ void ChessCls::SwitchTurn()
     {
         Turn = Player_White;
     }
+}
+
+void ChessCls::MovePiece(const MoveStc& from, const MoveStc& to)
+{
+    Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
+    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
+    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+
+    Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
 }
 
 bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
@@ -778,4 +795,103 @@ bool ChessCls::CheckKingMoveValidity(const MoveStc& from, const MoveStc& to)
     }
 
     return false;
+}
+
+std::vector<MoveStc> ChessCls::CalculatePossibleMoves(const MoveStc& from)
+{
+    std::vector<MoveStc> possibleMoves;
+    uint32_t index = CalculateIndex(from.File, from.Rank);
+
+    for (uint32_t file = 0; file < File_Count; file++)
+    {
+        for (uint32_t rank = 0; rank < Rank_Count; rank++)
+        {
+            MoveStc to = 
+            { 
+                static_cast<FileEnum>(file), 
+                static_cast<RankEnum>(rank) 
+            };
+
+            bool result = CheckMoveValidity(from, to);
+
+            if (result == true)
+            {
+                possibleMoves.push_back(to);
+            }
+        }
+    }
+
+    return possibleMoves;
+}
+
+MoveStc ChessCls::FindKing(const PlayerEnum& color)
+{
+    MoveStc kingIndex =
+    {
+        File_Count,
+        Rank_Count
+    };
+
+    for (uint32_t file = 0; file < File_Count; file++)
+    {
+        for (uint32_t rank = 0; rank < Rank_Count; rank++)
+        {
+            uint32_t index = CalculateIndex(file, rank);
+
+            if ((Table.Square[index].State == SquareState_Occupied) &&
+                (Table.Square[index].Piece.Owner == color) &&
+                (Table.Square[index].Piece.Name == Piece_King))
+            {
+                kingIndex.File = static_cast<FileEnum>(file);
+                kingIndex.Rank = static_cast<RankEnum>(rank);
+
+                break;
+            }
+        }
+    }
+
+    return kingIndex;
+}
+
+bool ChessCls::CheckMoveExposesKing(const MoveStc& from, const MoveStc& to)
+{
+    // Save original table state
+    TableStc tempTable = Table;
+    MoveStc kingIndex = FindKing(Turn);
+    bool result = false;
+
+    MovePiece(from, to);
+    SwitchTurn();
+
+    for (uint32_t file = 0; file < File_Count; file++)
+    {
+        for (uint32_t rank = 0; rank < Rank_Count; rank++)
+        {
+            uint32_t index = CalculateIndex(file, rank);
+
+            if ((Table.Square[index].State == SquareState_Occupied) &&
+                (Table.Square[index].Piece.Owner == Turn))
+            {
+                MoveStc fr =
+                {
+                    static_cast<FileEnum>(file),
+                    static_cast<RankEnum>(rank)
+                };
+
+                result = CheckMoveValidity(fr, kingIndex);
+
+                if (result == true)
+                {
+                    goto CLEAN_UP;
+                }
+            }
+        }
+    }
+
+    // Return original table state
+    CLEAN_UP:
+    Table = tempTable;
+    SwitchTurn();
+
+    return result;
 }

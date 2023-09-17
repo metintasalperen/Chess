@@ -31,7 +31,7 @@ Rectangle {
                 {
                     return "#ffce93";
                 }
-            }
-        }
-    }
-}
+            } // color
+        } // Rectangle
+    } // Repeater
+} // Rectangle

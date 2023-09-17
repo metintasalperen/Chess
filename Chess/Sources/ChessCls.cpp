@@ -99,3 +99,13 @@ uint32_t ChessCls::CalculateIndex(const FileEnum& file, const RankEnum& rank)
     uint32_t index = 8 * (7 - static_cast<uint32_t>(rank)) + static_cast<uint32_t>(file);
     return index;
 }
+
+bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
+{
+    return false;
+}
+
+void ChessCls::UpdateTableState(TableStc*& table)
+{
+    table = &Table;
+}

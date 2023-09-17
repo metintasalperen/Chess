@@ -18,7 +18,8 @@ add_executable (Chess
     "Headers/ChessCls.h" 
     "Sources/ChessCls.cpp" 
     "Headers/UiCls.h" 
-    "Sources/UiCls.cpp")
+    "Sources/UiCls.cpp" 
+    "Headers/UiChessIfc.h")
 
 target_link_libraries(Chess PRIVATE Qt6::Core Qt6::Quick)
 

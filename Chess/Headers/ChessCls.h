@@ -5,12 +5,13 @@
 
 #include "EnumPkg.h"
 #include "StructPkg.h"
+#include "UiChessIfc.h"
 
 // Responsible for;
 // * Holding table state
 // * Processing user moves
 // * Calculating checkmate/stalemate
-class ChessCls
+class ChessCls : public UiChessIfc
 {
 private:
 	TableStc Table;
@@ -25,6 +26,10 @@ public:
 private:
 	uint32_t CalculateIndex(uint32_t file, uint32_t rank);
 	uint32_t CalculateIndex(const FileEnum& file, const RankEnum& rank);
+
+public:
+	bool ProcessUserInput(const MoveStc& from, const MoveStc& to) override;
+	void UpdateTableState(TableStc*& table) override;
 };
 
 #endif

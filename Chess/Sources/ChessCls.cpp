@@ -200,6 +200,7 @@ bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
         }
         case Piece_King:
         {
+            result = CheckKingMoveValidity(from, to);
             break;
         }
         default:
@@ -740,6 +741,39 @@ bool ChessCls::CheckQueenMoveValidity(const MoveStc& from, const MoveStc& to)
             }
         }
 
+        return true;
+    }
+
+    return false;
+}
+
+bool ChessCls::CheckKingMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    uint32_t fileDiff = 0;
+    uint32_t rankDiff = 0;
+
+    if (to.Rank > from.Rank)
+    {
+        rankDiff = to.Rank - from.Rank;
+    }
+    else if (to.Rank < from.Rank)
+    {
+        rankDiff = from.Rank - to.Rank;
+    }
+
+    if (to.File > from.File)
+    {
+        fileDiff = to.File - from.File;
+    }
+    else
+    {
+        fileDiff = from.File - to.File;
+    }
+
+    if (((fileDiff == 1) && (rankDiff == 0)) ||
+        ((fileDiff == 0) && (rankDiff == 1)) ||
+        ((fileDiff == 1) && (rankDiff == 1)))
+    {
         return true;
     }
 

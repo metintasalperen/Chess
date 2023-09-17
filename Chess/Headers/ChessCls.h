@@ -38,11 +38,17 @@ private:
 	void SwitchTurn();
 
 	bool CheckMoveValidity(const MoveStc& from, const MoveStc& to);
+
+	// TODO: Add en passant
 	bool CheckPawnMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckRookMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckKnightMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckBishopMoveValidity(const MoveStc& from, const MoveStc& to);
 	bool CheckQueenMoveValidity(const MoveStc& from, const MoveStc& to);
+
+	// TODO: Add castling
+	// TODO: Check whether move cause king to be under attack
+	bool CheckKingMoveValidity(const MoveStc& from, const MoveStc& to);
 };
 
 #endif

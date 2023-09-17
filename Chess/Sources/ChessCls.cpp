@@ -185,6 +185,7 @@ bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
         }
         case Piece_Knight:
         {
+            result = CheckKnightMoveValidity(from, to);
             break;
         }
         case Piece_Bishop:
@@ -480,6 +481,23 @@ bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
 
             return true;
         }
+    }
+
+    return false;
+}
+
+bool ChessCls::CheckKnightMoveValidity(const MoveStc& from, const MoveStc& to)
+{
+    if (((to.Rank == from.Rank + 2) && (to.File == from.File + 1)) ||
+        ((to.Rank == from.Rank + 1) && (to.File == from.File + 2)) ||
+        ((to.Rank == from.Rank + 2) && (to.File == from.File - 1)) ||
+        ((to.Rank == from.Rank + 1) && (to.File == from.File - 2)) ||
+        ((to.Rank == from.Rank - 2) && (to.File == from.File + 1)) ||
+        ((to.Rank == from.Rank - 1) && (to.File == from.File + 2)) ||
+        ((to.Rank == from.Rank - 2) && (to.File == from.File - 1)) ||
+        ((to.Rank == from.Rank - 1) && (to.File == from.File - 2)))
+    {
+        return true;
     }
 
     return false;

@@ -30,6 +30,8 @@ private:
 public:
 	bool ProcessUserInput(const MoveStc& from, const MoveStc& to) override;
 	void UpdateTableState(TableStc*& table) override;
+
+	UiChessIfc* GetItsUiChessIfc();
 };
 
 #endif

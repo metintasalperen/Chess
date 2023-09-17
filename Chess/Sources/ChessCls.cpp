@@ -102,10 +102,21 @@ uint32_t ChessCls::CalculateIndex(const FileEnum& file, const RankEnum& rank)
 
 bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
 {
-    return false;
+    Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
+    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
+    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+
+    Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
+
+    return true;
 }
 
 void ChessCls::UpdateTableState(TableStc*& table)
 {
     table = &Table;
+}
+
+UiChessIfc* ChessCls::GetItsUiChessIfc()
+{
+    return this;
 }

@@ -2,5 +2,18 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>ChessBoard.qml</file>
+        <file>white_pawn.svg</file>
+        <file>white_rook.svg</file>
+        <file>white_knight.svg</file>
+        <file>white_bishop.svg</file>
+        <file>white_queen.svg</file>
+        <file>white_king.svg</file>
+        <file>black_pawn.svg</file>
+        <file>black_rook.svg</file>
+        <file>black_knight.svg</file>
+        <file>black_bishop.svg</file>
+        <file>black_queen.svg</file>
+        <file>black_king.svg</file>
+        <file>empty.png</file>
     </qresource>
 </RCC>

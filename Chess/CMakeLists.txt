@@ -25,8 +25,8 @@ target_link_libraries(Chess PRIVATE Qt6::Core Qt6::Quick)
 qt6_add_resources(Chess
     qml.qrc)
 
-# Use configure_file to copy QML files to the build directory
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Qml/main.qml ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/main.qml COPYONLY)
+# Copy all QML files from the source directory to the binary directory
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Qml/ DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
 target_include_directories(Chess PRIVATE ${CMAKE_SOURCE_DIR}/Chess)
 

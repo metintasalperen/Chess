@@ -6,10 +6,13 @@
 
 #include "StructPkg.h"
 #include "UiChessIfc.h"
+#include "Headers/ConstPkg.h"
 
 class UiCls : public QObject
 {
 	Q_OBJECT
+	Q_PROPERTY(QStringList imageData READ getImageData NOTIFY imageDataChanged)
+
 public:
 	explicit UiCls(QObject* parent = nullptr);
 
@@ -41,15 +44,25 @@ public slots:
 	// 1: Black
 	int getTurn();
 
+	void updateTable();
+
+signals:
+	void imageDataChanged();
+
+public:
+	QStringList getImageData() const;
+
 private:
 	TableStc* TablePtr;
 	UiChessIfc* ItsUiChessIfc;
 
 public:
+	QStringList imageList;
+
 	void SetItsUiChessIfc(UiChessIfc* ifc);
-	void UpdateTableState();
 
 private:
+	void UpdateTableState();
 	uint32_t CalculateIndex(uint32_t file, uint32_t rank);
 };
 

@@ -12,6 +12,9 @@ void ChessCls::Initialize()
 {
     Turn = Player_White;
     TurnCount = 0;
+    CastlingAvailable[Player_White] = true;
+    CastlingAvailable[Player_Black] = true;
+    IsLastMoveCastling = false;
 
     memset(&Table, 0, sizeof(Table));
     for (int i = 0; i < File_Count; i++)
@@ -155,11 +158,84 @@ void ChessCls::SwitchTurn()
 
 void ChessCls::MovePiece(const MoveStc& from, const MoveStc& to)
 {
-    Table.Square[CalculateIndex(to.File, to.Rank)].State = SquareState_Occupied;
-    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
-    Table.Square[CalculateIndex(to.File, to.Rank)].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+    uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
+    uint32_t toIndex = CalculateIndex(to.File, to.Rank);
 
-    Table.Square[CalculateIndex(from.File, from.Rank)].State = SquareState_Empty;
+    Table.Square[toIndex].State = SquareState_Occupied;
+    Table.Square[toIndex].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
+    Table.Square[toIndex].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+
+    Table.Square[fromIndex].State = SquareState_Empty;
+
+    if (IsLastMoveCastling == true)
+    {
+        if (Turn == Player_White)
+        {
+            const uint32_t kingSideRookIndex = CalculateIndex(File_H, Rank_1);
+            const uint32_t kingSideRookNewIndex = CalculateIndex(File_F, Rank_1);
+            const uint32_t queenSideRookIndex = CalculateIndex(File_A, Rank_1);
+            const uint32_t queenSideRookNewIndex = CalculateIndex(File_D, Rank_1);
+
+            // King side castling
+            if (to.File > from.File)
+            {
+                Table.Square[kingSideRookNewIndex].State = SquareState_Occupied;
+                Table.Square[kingSideRookNewIndex].Piece.Name = Piece_Rook;
+                Table.Square[kingSideRookNewIndex].Piece.Owner = Player_White;
+
+                Table.Square[kingSideRookIndex].State = SquareState_Empty;
+            }
+            // Queen side castling
+            else
+            {
+                Table.Square[queenSideRookNewIndex].State = SquareState_Occupied;
+                Table.Square[queenSideRookNewIndex].Piece.Name = Piece_Rook;
+                Table.Square[queenSideRookNewIndex].Piece.Owner = Player_White;
+
+                Table.Square[queenSideRookIndex].State = SquareState_Empty;
+            }
+        }
+        else
+        {
+            const uint32_t kingSideRookIndex = CalculateIndex(File_H, Rank_8);
+            const uint32_t kingSideRookNewIndex = CalculateIndex(File_F, Rank_8);
+            const uint32_t queenSideRookIndex = CalculateIndex(File_A, Rank_8);
+            const uint32_t queenSideRookNewIndex = CalculateIndex(File_D, Rank_8);
+
+            // King side castling
+            if (to.File > from.File)
+            {
+                Table.Square[kingSideRookNewIndex].State = SquareState_Occupied;
+                Table.Square[kingSideRookNewIndex].Piece.Name = Piece_Rook;
+                Table.Square[kingSideRookNewIndex].Piece.Owner = Player_Black;
+
+                Table.Square[kingSideRookIndex].State = SquareState_Empty;
+            }
+            // Queen side castling
+            else
+            {
+                Table.Square[queenSideRookNewIndex].State = SquareState_Occupied;
+                Table.Square[queenSideRookNewIndex].Piece.Name = Piece_Rook;
+                Table.Square[queenSideRookNewIndex].Piece.Owner = Player_Black;
+
+                Table.Square[queenSideRookIndex].State = SquareState_Empty;
+            }
+        }
+
+        IsLastMoveCastling = false;
+    }
+}
+
+void ChessCls::MovePieceNoCastling(const MoveStc& from, const MoveStc& to)
+{
+    uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
+    uint32_t toIndex = CalculateIndex(to.File, to.Rank);
+
+    Table.Square[toIndex].State = SquareState_Occupied;
+    Table.Square[toIndex].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
+    Table.Square[toIndex].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
+
+    Table.Square[fromIndex].State = SquareState_Empty;
 }
 
 bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
@@ -448,7 +524,7 @@ bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
                 }
             }
 
-            return true;
+            goto CASTLING_DISABLE;
         }
         // Backward move
         else
@@ -464,7 +540,7 @@ bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
                 }
             }
 
-            return true;
+            goto CASTLING_DISABLE;
         }
     }
     else if ((from.File != to.File) && (from.Rank == to.Rank))
@@ -483,7 +559,7 @@ bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
                 }
             }
 
-            return true;
+            goto CASTLING_DISABLE;
         }
         // Left move
         else
@@ -499,11 +575,22 @@ bool ChessCls::CheckRookMoveValidity(const MoveStc& from, const MoveStc& to)
                 }
             }
 
-            return true;
+            goto CASTLING_DISABLE;
         }
     }
 
     return false;
+
+    CASTLING_DISABLE:
+    if (((from.File == File_A) && (from.Rank == Rank_1)) ||
+        ((from.File == File_A) && (from.Rank == Rank_8)) ||
+        ((from.File == File_H) && (from.Rank == Rank_1)) ||
+        ((from.File == File_H) && (from.Rank == Rank_8)))
+    {
+        Table.Square[CalculateIndex(from.File, from.Rank)].IsRookMoved = true;
+    }
+
+    return true;
 }
 
 bool ChessCls::CheckKnightMoveValidity(const MoveStc& from, const MoveStc& to)
@@ -787,11 +874,142 @@ bool ChessCls::CheckKingMoveValidity(const MoveStc& from, const MoveStc& to)
         fileDiff = from.File - to.File;
     }
 
+    // Regular move
     if (((fileDiff == 1) && (rankDiff == 0)) ||
         ((fileDiff == 0) && (rankDiff == 1)) ||
         ((fileDiff == 1) && (rankDiff == 1)))
     {
+        CastlingAvailable[Turn] = false;
         return true;
+    }
+
+    // Castling
+    if ( (CastlingAvailable[Turn] == true) && (fileDiff == 2) && (rankDiff == 0) )
+    {
+        if (Turn == Player_White)
+        {
+            const MoveStc kingSideRook = { File_H, Rank_1 };
+            const MoveStc queenSideRook = { File_A, Rank_1 };
+            const uint32_t kingSideRookIndex = CalculateIndex(File_H, Rank_1);
+            const uint32_t queenSideRookIndex = CalculateIndex(File_A, Rank_1);
+
+            // King side castling
+            if (to.File > from.File)
+            {
+                if (Table.Square[kingSideRookIndex].Piece.Name != Piece_Rook)
+                {
+                    return false;
+                }
+
+                if (Table.Square[kingSideRookIndex].IsRookMoved == true)
+                {
+                    return false;
+                }
+
+                uint32_t index1 = CalculateIndex(from.File + 1, from.Rank);
+                uint32_t index2 = CalculateIndex(from.File + 2, from.Rank);
+
+                if ((Table.Square[index1].State == SquareState_Occupied) ||
+                    (Table.Square[index2].State == SquareState_Occupied))
+                {
+                    return false;
+                }
+
+                IsLastMoveCastling = true;
+                CastlingAvailable[Turn] = false;
+                return true;
+            }
+            // Queen side castling
+            else
+            {
+                if (Table.Square[queenSideRookIndex].Piece.Name != Piece_Rook)
+                {
+                    return false;
+                }
+
+                if (Table.Square[queenSideRookIndex].IsRookMoved == true)
+                {
+                    return false;
+                }
+
+                uint32_t index1 = CalculateIndex(from.File - 1, from.Rank);
+                uint32_t index2 = CalculateIndex(from.File - 2, from.Rank);
+                uint32_t index3 = CalculateIndex(from.File - 3, from.Rank);
+
+                if ((Table.Square[index1].State == SquareState_Occupied) ||
+                    (Table.Square[index2].State == SquareState_Occupied) ||
+                    (Table.Square[index3].State == SquareState_Occupied))
+                {
+                    return false;
+                }
+
+                IsLastMoveCastling = true;
+                CastlingAvailable[Turn] = false;
+                return true;
+            }
+        }
+        else
+        {
+            const MoveStc kingSideRook = { File_H, Rank_8 };
+            const MoveStc queenSideRook = { File_A, Rank_8 };
+            const uint32_t kingSideRookIndex = CalculateIndex(File_H, Rank_8);
+            const uint32_t queenSideRookIndex = CalculateIndex(File_A, Rank_8);
+
+            // King side castling
+            if (to.File > from.File)
+            {
+                if (Table.Square[kingSideRookIndex].Piece.Name != Piece_Rook)
+                {
+                    return false;
+                }
+
+                if (Table.Square[kingSideRookIndex].IsRookMoved == true)
+                {
+                    return false;
+                }
+
+                uint32_t index1 = CalculateIndex(from.File + 1, from.Rank);
+                uint32_t index2 = CalculateIndex(from.File + 2, from.Rank);
+
+                if ((Table.Square[index1].State == SquareState_Occupied) ||
+                    (Table.Square[index2].State == SquareState_Occupied))
+                {
+                    return false;
+                }
+
+                IsLastMoveCastling = true;
+                CastlingAvailable[Turn] = false;
+                return true;
+            }
+            // Queen side castling
+            else
+            {
+                if (Table.Square[queenSideRookIndex].Piece.Name != Piece_Rook)
+                {
+                    return false;
+                }
+
+                if (Table.Square[queenSideRookIndex].IsRookMoved == true)
+                {
+                    return false;
+                }
+
+                uint32_t index1 = CalculateIndex(from.File - 1, from.Rank);
+                uint32_t index2 = CalculateIndex(from.File - 2, from.Rank);
+                uint32_t index3 = CalculateIndex(from.File - 3, from.Rank);
+
+                if ((Table.Square[index1].State == SquareState_Occupied) ||
+                    (Table.Square[index2].State == SquareState_Occupied) ||
+                    (Table.Square[index3].State == SquareState_Occupied))
+                {
+                    return false;
+                }
+
+                IsLastMoveCastling = true;
+                CastlingAvailable[Turn] = false;
+                return true;
+            }
+        }
     }
 
     return false;
@@ -860,7 +1078,7 @@ bool ChessCls::CheckMoveExposesKing(const MoveStc& from, const MoveStc& to)
     MoveStc kingIndex = FindKing(Turn);
     bool result = false;
 
-    MovePiece(from, to);
+    MovePieceNoCastling(from, to);
     SwitchTurn();
 
     for (uint32_t file = 0; file < File_Count; file++)

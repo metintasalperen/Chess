@@ -70,31 +70,31 @@ Rectangle {
                 x: (parent.width - width) / 2;
                 y: (parent.height - height) / 2;
 
-                source: {
-                    var color = UiObject.getPieceColor(square.file, square.rank);
-                    var type = UiObject.getPieceType(square.file, square.rank);
-
-                    return setPicture(color, type);
-                }
+                source: UiObject.imageData[calculateIndex(square.file, square.rank)]
 
                 MouseArea {
                     width: square.width;
                     height: square.height;
 
                     onClicked: {
+                        // Piece selection
                         if (!root.fromClicked)
                         {
                             var turn = UiObject.getTurn();
                             var color = UiObject.getPieceColor(square.file, square.rank);
 
+                            // if player selects its own piece, set green border around the piece
                             if (turn == color)
                             {
                                 square.showBorder = !square.showBorder;
-                                root.fromClicked = true;
+
                                 root.fromFile = square.file;
                                 root.fromRank = square.rank;
+
+                                root.fromClicked = true;
                             }
                         }
+                        // Destination selection
                         else
                         {
                             root.fromClicked = false;
@@ -102,11 +102,7 @@ Rectangle {
                             var moveValidity = UiObject.getUserInput(root.fromFile, root.fromRank, square.file, square.rank);
                             if (moveValidity)
                             {
-                                var index = calculateIndex(root.fromFile, root.fromRank);
-                                var image = pieceImages[indexes[index]];
-
-                                pieceImage.source = image.source;
-                                image.source = "empty.png";
+                                UiObject.updateTable();
                             }
 
                             var fromSquare = board.itemAt(indexes[calculateIndex(root.fromFile, root.fromRank)]);
@@ -118,71 +114,6 @@ Rectangle {
         } // Rectangle
     } // Repeater
 
-
-
-    // Function definitions
-    function setPicture(color, type)
-    {
-        if (color == 0)
-        {
-            if (type == 0)
-            {
-                return "white_pawn.svg";
-            }
-            else if (type == 1)
-            {
-                return "white_rook.svg";
-            }
-            else if (type == 2)
-            {
-                return "white_knight.svg";
-            }
-            else if (type == 3)
-            {
-                return "white_bishop.svg";
-            }
-            else if (type == 4)
-            {
-                return "white_queen.svg";
-            }
-            else if (type == 5)
-            {
-                return "white_king.svg";
-            }
-        }
-        else if (color == 1)
-        {
-            if (type == 0)
-            {
-                return "black_pawn.svg";
-            }
-            else if (type == 1)
-            {
-                return "black_rook.svg";
-            }
-            else if (type == 2)
-            {
-                return "black_knight.svg";
-            }
-            else if (type == 3)
-            {
-                return "black_bishop.svg";
-            }
-            else if (type == 4)
-            {
-                return "black_queen.svg";
-            }
-            else if (type == 5)
-            {
-                return "black_king.svg";
-            }
-        }
-        else
-        {
-            return "empty.png";
-        }
-    }
-    
     function calculateIndex(file, rank)
     {
         return 8 * (7 - rank) + file;

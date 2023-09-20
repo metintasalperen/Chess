@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
         ui.SetItsUiChessIfc(ifc);
     }
 
-    ui.UpdateTableState();
+    ui.updateTable();
 
     // Qt Stuff
     QGuiApplication app(argc, argv);

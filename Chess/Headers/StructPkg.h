@@ -18,7 +18,12 @@ struct PieceStc
 struct SquareStc
 {
     SquareStateEnum State;
+
+    // Data in Piece is valid only if State is SquareState_Occupied
     PieceStc Piece;
+    
+    // Data in IsRookMoved is valid only if Piece.Name is Piece_Rook
+    bool IsRookMoved;
 };
 
 struct TableStc

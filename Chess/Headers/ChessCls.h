@@ -20,6 +20,7 @@ private:
 	uint32_t TurnCount;
 	bool CastlingAvailable[Player_Count];
 	bool IsLastMoveCastling;
+	GameStateEnum GameState;
 
 public:
 	// Initializers
@@ -34,6 +35,7 @@ public:
 	bool ProcessUserInput(const MoveStc& from, const MoveStc& to) override;
 	void UpdateTableState(TableStc*& table) override;
 	PlayerEnum GetTurn() override;
+	GameStateEnum GetGameState() override;
 
 	UiChessIfc* GetItsUiChessIfc();
 

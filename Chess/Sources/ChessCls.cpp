@@ -15,6 +15,7 @@ void ChessCls::Initialize()
     CastlingAvailable[Player_White] = true;
     CastlingAvailable[Player_Black] = true;
     IsLastMoveCastling = false;
+    GameState = GameState_Ongoing;
 
     memset(&Table, 0, sizeof(Table));
     for (int i = 0; i < File_Count; i++)
@@ -117,9 +118,17 @@ bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
             return false;
         }
 
-        if (IsCheckmate(from, to))
+        if (IsCheckmate(from, to) == true)
         {
-            throw "CHECKMATE IS NOT IMPLEMENTED";
+            //throw "CHECKMATE IS NOT IMPLEMENTED";
+            if (Turn == Player_White)
+            {
+                GameState = GameState_WhiteWon;
+            }
+            else
+            {
+                GameState = GameState_BlackWon;
+            }
         }
 
         MovePiece(from, to);
@@ -142,6 +151,11 @@ void ChessCls::UpdateTableState(TableStc*& table)
 PlayerEnum ChessCls::GetTurn()
 {
     return Turn;
+}
+
+GameStateEnum ChessCls::GetGameState()
+{
+    return GameState;
 }
 
 UiChessIfc* ChessCls::GetItsUiChessIfc()

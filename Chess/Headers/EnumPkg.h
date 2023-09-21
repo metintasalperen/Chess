@@ -50,4 +50,12 @@ enum PieceEnum
     Piece_King
 };
 
+enum GameStateEnum
+{
+    GameState_Ongoing = 0,
+    GameState_WhiteWon,
+    GameState_BlackWon,
+    GameState_Stalemate
+};
+
 #endif

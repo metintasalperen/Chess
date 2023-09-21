@@ -1074,9 +1074,14 @@ MoveStc ChessCls::FindKing(const PlayerEnum& color)
 bool ChessCls::CheckMoveExposesKing(const MoveStc& from, const MoveStc& to)
 {
     // Save original table state
-    TableStc tempTable = Table;
-    MoveStc kingIndex = FindKing(Turn);
     bool result = false;
+    TableStc tempTable = Table;
+
+    MoveStc kingIndex = FindKing(Turn);
+    if (Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name == Piece_King)
+    {
+        kingIndex = to;
+    }
 
     MovePieceNoCastling(from, to);
     SwitchTurn();

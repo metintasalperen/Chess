@@ -62,6 +62,8 @@ private:
 	// This method only called if CheckMoveValidity methods returns true
 	// So no need to check trivial move controls again
 	bool CheckMoveExposesKing(const MoveStc& from, const MoveStc& to);
+
+	bool IsCheckmate(const MoveStc& from, const MoveStc& to);
 };
 
 #endif

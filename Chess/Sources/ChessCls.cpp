@@ -117,6 +117,11 @@ bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
             return false;
         }
 
+        if (IsCheckmate(from, to))
+        {
+            throw "CHECKMATE IS NOT IMPLEMENTED";
+        }
+
         MovePiece(from, to);
         SwitchTurn();
         return true;
@@ -1107,4 +1112,48 @@ bool ChessCls::CheckMoveExposesKing(const MoveStc& from, const MoveStc& to)
     SwitchTurn();
 
     return result;
+}
+
+bool ChessCls::IsCheckmate(const MoveStc& from, const MoveStc& to)
+{
+    bool isCheckmate = true;
+    TableStc tempTable = Table;
+    bool temp = IsLastMoveCastling;
+
+    MovePiece(from, to);
+    SwitchTurn();
+
+    for (uint32_t file = 0; file < File_Count; file++)
+    {
+        for (uint32_t rank = 0; rank < Rank_Count; rank++)
+        {
+            uint32_t index = CalculateIndex(file, rank);
+
+            MoveStc currPos = { static_cast<FileEnum>(file), static_cast<RankEnum>(rank) };
+            std::vector<MoveStc> possibleMoves = CalculatePossibleMoves(currPos);
+
+            for (uint32_t i = 0; i < possibleMoves.size(); i++)
+            {
+                bool result = CheckMoveValidity(currPos, possibleMoves[i]);
+
+                if (result == true)
+                {
+                    result = CheckMoveExposesKing(from, to);
+
+                    if (result == false)
+                    {
+                        isCheckmate = false;
+                        goto CLEAN_UP;
+                    }
+                }
+            }
+        }
+    }
+
+CLEAN_UP:
+    IsLastMoveCastling = temp;
+    Table = tempTable;
+    SwitchTurn();
+    
+    return isCheckmate;
 }

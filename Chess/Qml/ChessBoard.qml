@@ -2,9 +2,9 @@ import QtQuick 2.9
 
 Rectangle {
     id: root
-    color: "#ffcccccc";
+    //color: "#ffcccccc";
 
-    readonly property int squareSize: Math.min(width, height) / 8;
+    readonly property int squareSize: Math.min(8 * width / 10, 8 * height/ 10) / 8;
 
     property bool fromClicked: false;
     property int fromFile: 0;
@@ -24,8 +24,8 @@ Rectangle {
             property int file: index % 8;
 
             z: 0;
-            x: file * squareSize;
-            y: (7 - rank) * squareSize;
+            x: file * squareSize + squareSize;
+            y: (7 - rank) * squareSize + squareSize;
 
             height: squareSize;
             width: squareSize;
@@ -113,6 +113,157 @@ Rectangle {
             }
         } // Rectangle
     } // Repeater
+
+    // Board Border
+    // Top
+    Repeater {
+        model: 8
+
+        Rectangle {
+            width: squareSize
+            height: squareSize
+
+            color: "#d18b47";
+
+            Text {
+                id: textArea
+                anchors.centerIn: parent
+                text: {
+                    if (index === 0)
+                    {
+                        return "A";
+                    }
+                    else if (index === 1)
+                    {
+                        return "B";
+                    }
+                    else if (index === 2)
+                    {
+                        return "C";
+                    }
+                    else if (index === 3)
+                    {
+                        return "D";
+                    }
+                    else if (index === 4)
+                    {
+                        return "E";
+                    }
+                    else if (index === 5)
+                    {
+                        return "F";
+                    }
+                    else if (index === 6)
+                    {
+                        return "G";
+                    }
+                    else if (index === 7)
+                    {
+                        return "H";
+                    }
+                }
+            }
+
+            x: (index + 1) * squareSize
+            y: 0
+        }
+    }
+
+    // Bottom
+    Repeater {
+        model: 8
+
+        Rectangle {
+            width: squareSize
+            height: squareSize
+
+            color: "#d18b47";
+
+            Text {
+                id: textArea
+                anchors.centerIn: parent
+                text: {
+                    if (index === 0)
+                    {
+                        return "A";
+                    }
+                    else if (index === 1)
+                    {
+                        return "B";
+                    }
+                    else if (index === 2)
+                    {
+                        return "C";
+                    }
+                    else if (index === 3)
+                    {
+                        return "D";
+                    }
+                    else if (index === 4)
+                    {
+                        return "E";
+                    }
+                    else if (index === 5)
+                    {
+                        return "F";
+                    }
+                    else if (index === 6)
+                    {
+                        return "G";
+                    }
+                    else if (index === 7)
+                    {
+                        return "H";
+                    }
+                }
+            }
+
+            x: (index + 1) * squareSize
+            y: 9 * squareSize
+        }
+    }
+
+    // Left
+    Repeater {
+        model: 8
+
+        Rectangle {
+            width: squareSize
+            height: squareSize
+
+            color: "#d18b47";
+
+            Text {
+                id: textArea
+                anchors.centerIn: parent
+                text: "" + (8 - index)
+            }
+
+            x: 0
+            y: (index + 1) * squareSize
+        }
+    }
+
+    // Right
+    Repeater {
+        model: 8
+
+        Rectangle {
+            width: squareSize
+            height: squareSize
+
+            color: "#d18b47";
+
+            Text {
+                id: textArea
+                anchors.centerIn: parent
+                text: "" + (8 - index)
+            }
+
+            x: 9 * squareSize
+            y: (index + 1) * squareSize
+        }
+    }
 
     function calculateIndex(file, rank)
     {

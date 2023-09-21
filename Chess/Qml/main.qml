@@ -3,12 +3,12 @@ import QtQuick.Window 2.2
 
 Window {
     visible: true
-    width: 480
-    height: 480
+    width: 600
+    height: 600
     title: "Chess"
     
     ChessBoard {
-        width: 480
-        height: 480
+        width: 600
+        height: 600
     }
 }

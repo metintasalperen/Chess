@@ -41,7 +41,6 @@ private:
 	void SwitchTurn();
 
 	void MovePiece(const MoveStc& from, const MoveStc& to);
-	void MovePieceNoCastling(const MoveStc& from, const MoveStc& to);
 
 	bool CheckMoveValidity(const MoveStc& from, const MoveStc& to);
 

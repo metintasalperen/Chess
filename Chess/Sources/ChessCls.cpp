@@ -226,18 +226,6 @@ void ChessCls::MovePiece(const MoveStc& from, const MoveStc& to)
     }
 }
 
-void ChessCls::MovePieceNoCastling(const MoveStc& from, const MoveStc& to)
-{
-    uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
-    uint32_t toIndex = CalculateIndex(to.File, to.Rank);
-
-    Table.Square[toIndex].State = SquareState_Occupied;
-    Table.Square[toIndex].Piece.Name = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Name;
-    Table.Square[toIndex].Piece.Owner = Table.Square[CalculateIndex(from.File, from.Rank)].Piece.Owner;
-
-    Table.Square[fromIndex].State = SquareState_Empty;
-}
-
 bool ChessCls::CheckMoveValidity(const MoveStc& from, const MoveStc& to)
 {
     uint32_t fromIndex = CalculateIndex(from.File, from.Rank);
@@ -1083,7 +1071,9 @@ bool ChessCls::CheckMoveExposesKing(const MoveStc& from, const MoveStc& to)
         kingIndex = to;
     }
 
-    MovePieceNoCastling(from, to);
+    bool temp = IsLastMoveCastling;
+    MovePiece(from, to);
+    IsLastMoveCastling = temp;
     SwitchTurn();
 
     for (uint32_t file = 0; file < File_Count; file++)

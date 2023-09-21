@@ -70,6 +70,16 @@ int UiCls::getTurn()
     return static_cast<int>(ItsUiChessIfc->GetTurn());
 }
 
+int UiCls::getGameState()
+{
+    return static_cast<int>(ItsUiChessIfc->GetGameState());
+}
+
+void UiCls::restartGame()
+{
+    ItsUiChessIfc->Initialize();
+}
+
 void UiCls::updateTable()
 {
     UpdateTableState();

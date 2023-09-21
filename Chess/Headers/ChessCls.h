@@ -25,7 +25,7 @@ private:
 public:
 	// Initializers
 	ChessCls();
-	void Initialize();
+	virtual void Initialize() override;
 
 private:
 	uint32_t CalculateIndex(uint32_t file, uint32_t rank);

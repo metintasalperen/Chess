@@ -44,6 +44,14 @@ public slots:
 	// 1: Black
 	int getTurn();
 
+	// 0: Ongoing
+	// 1: White wins
+	// 2: Black wins
+	// 3: Stalemate
+	int getGameState();
+
+	void restartGame();
+
 	void updateTable();
 
 signals:

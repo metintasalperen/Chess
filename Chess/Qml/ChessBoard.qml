@@ -107,6 +107,21 @@ Rectangle {
 
                             var fromSquare = board.itemAt(indexes[calculateIndex(root.fromFile, root.fromRank)]);
                             fromSquare.showBorder = !fromSquare.showBorder;
+
+                            var gameState = UiObject.getGameState();
+
+                            if (gameState === 1)
+                            {
+                                console.log("WHITE WINS");
+                                UiObject.restartGame();
+                                UiObject.updateTable();
+                            }
+                            else if (gameState === 2)
+                            {
+                                console.log("BLACK WINS");
+                                UiObject.restartGame();
+                                UiObject.updateTable();
+                            }
                         }
                     }
                 }

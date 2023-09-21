@@ -120,7 +120,6 @@ bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
 
         if (IsCheckmate(from, to) == true)
         {
-            //throw "CHECKMATE IS NOT IMPLEMENTED";
             if (Turn == Player_White)
             {
                 GameState = GameState_WhiteWon;
@@ -139,8 +138,6 @@ bool ChessCls::ProcessUserInput(const MoveStc& from, const MoveStc& to)
     {
         return false;
     }
-
-    //return result;
 }
 
 void ChessCls::UpdateTableState(TableStc*& table)

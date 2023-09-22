@@ -1145,17 +1145,12 @@ bool ChessCls::IsCheckmate(const MoveStc& from, const MoveStc& to)
 
             for (uint32_t i = 0; i < possibleMoves.size(); i++)
             {
-                bool result = CheckMoveValidity(currPos, possibleMoves[i]);
+                bool result = CheckMoveExposesKing(currPos, possibleMoves[i]);
 
-                if (result == true)
+                if (result == false)
                 {
-                    result = CheckMoveExposesKing(from, to);
-
-                    if (result == false)
-                    {
-                        isCheckmate = false;
-                        goto CLEAN_UP;
-                    }
+                    isCheckmate = false;
+                    goto CLEAN_UP;
                 }
             }
         }
